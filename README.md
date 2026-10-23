@@ -80,3 +80,38 @@ cd backend
 python fast.py
 ```
 *(Ou `python -m uvicorn fast:app --reload`)*
+
+---
+
+## 👨‍💻 Autor & Currículo — Arthur Campos Rocha
+
+**Estudante de TI e Ciência de Dados | Desenvolvimento Back-end | Análise de Dados**
+
+### 📫 Contatos
+[![Gmail](https://img.shields.io/badge/E--mail-arthurcamrocha2005%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:arthurcamrocha2005@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-arthur--campos--rocha2005-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/arthur-campos-rocha2005)
+[![GitHub](https://img.shields.io/badge/GitHub-arthurcamrocha20052008-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/arthurcamrocha20052008)
+
+- 📧 **E-mail:** [arthurcamrocha2005@gmail.com](mailto:arthurcamrocha2005@gmail.com)
+- 💼 **LinkedIn:** [https://www.linkedin.com/in/arthur-campos-rocha2005](https://www.linkedin.com/in/arthur-campos-rocha2005)
+- 🐙 **GitHub:** [https://github.com/arthurcamrocha20052008](https://github.com/arthurcamrocha20052008)
+
+### 📋 Resumo Profissional
+Estudante de Tecnologia da Informação na UFMS e de Ciência de Dados no CEUB, com projetos práticos em desenvolvimento web, APIs, bancos de dados e análise de dados. Utilizo Python, FastAPI, MySQL, Pandas e ferramentas de visualização para construir soluções funcionais, automatizar etapas de tratamento de dados e apresentar informações de forma clara. Busco uma oportunidade de estágio ou nível inicial para contribuir com a equipe, ampliar minha experiência e evoluir tecnicamente.
+
+### 🎓 Formação Acadêmica
+- **Universidade Federal de Mato Grosso do Sul (UFMS)** — Tecnologia da Informação, modalidade EaD *(em andamento)*.
+- **Centro Universitário de Brasília (CEUB)** — Ciência de Dados *(em andamento)*.
+
+### 📂 Outros Projetos em Destaque
+- **Dados 2.0 — Dashboards Automatizados:** [https://dashbordmagico.vercel.app/](https://dashbordmagico.vercel.app/)
+- **Sistema de Fluxo de Caixa — Aplicação Web e API REST:** [https://fluxo-caixa-coral-two.vercel.app/login.html](https://fluxo-caixa-coral-two.vercel.app/login.html)
+- **ETL e Análise de Dados:** [https://github.com/arthurcamrocha20052008](https://github.com/arthurcamrocha20052008)
+- **Análise de Dados Hospitalares:** Python, Pandas, NumPy, Matplotlib e Excel.
+- **Dashboard de Sondagem Industrial:** Power BI e visualização de dados.
+
+### 🛠️ Conhecimentos Técnicos, Competências & Idiomas
+- **Conhecimentos Técnicos:** Python; SQL; MySQL; FastAPI; APIs REST; SQLAlchemy; Git e GitHub; HTML e CSS; JavaScript (fundamentos); Pandas; NumPy; Matplotlib; Power BI; ETL; Alembic; Pytest; autenticação JWT; fundamentos de POO e Machine Learning.
+- **Competências:** Organização; responsabilidade; proatividade; aprendizado contínuo; raciocínio lógico em desenvolvimento; resolução de problemas; iniciativa para desenvolver projetos; colaboração e comprometimento.
+- **Idiomas:** Inglês — nível intermediário (B1).
+- **Objetivo Profissional:** Estágio ou posição de nível inicial em Tecnologia da Informação, com foco em desenvolvimento back-end, Python, análise de dados e Business Intelligence.
