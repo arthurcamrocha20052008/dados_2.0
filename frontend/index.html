@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mágico Automático</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans selection:bg-indigo-500 selection:text-white">
+
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Cabeçalho -->
+        <header class="text-center mb-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-medium mb-3">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Auto-EDA + Robô de Limpeza de Dados
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+                Dashboard Mágico Automático
+            </h1>
+            <p class="text-slate-400 mt-2 max-w-2xl mx-auto">
+                Arraste qualquer planilha Excel ou CSV. O sistema corrige erros estruturais, formata moedas/datas e monta os melhores gráficos sozinho.
+            </p>
+        </header>
+
+        <!-- Seção de Upload (Drag & Drop + Botão Demo) -->
+        <div id="upload-section" class="max-w-3xl mx-auto mb-8 space-y-4">
+            <div id="upload-container" class="bg-slate-800/80 border-2 border-dashed border-slate-600 rounded-2xl p-12 text-center hover:border-indigo-500 hover:bg-slate-800 transition cursor-pointer shadow-xl group">
+                <input type="file" id="excel-file" class="hidden" accept=".xlsx, .xls, .csv">
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <div class="p-4 rounded-2xl bg-indigo-500/10 group-hover:bg-indigo-500/20 transition">
+                        <i data-lucide="cloud-upload" class="w-14 h-14 text-indigo-400 animate-bounce"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-slate-100">
+                        Arraste sua planilha aqui ou <span class="text-indigo-400 underline">clique para selecionar</span>
+                    </h3>
+                    <p class="text-sm text-slate-400">
+                        Suporta <code class="text-slate-300">.xlsx</code>, <code class="text-slate-300">.xls</code> e <code class="text-slate-300">.csv</code> • Limpeza automática de células vazias, duplicatas e erros (<code class="text-slate-300">#DIV/0!</code>, <code class="text-slate-300">R$</code>)
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center pt-2">
+                <button id="btn-demo" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sm font-medium text-indigo-300 transition shadow">
+                    <i data-lucide="wand-2" class="w-4 h-4"></i>
+                    Não tem uma planilha agora? Testar com Planilha de Exemplo (Com Erros)
+                </button>
+            </div>
+        </div>
+
+        <!-- Loader (A Mágica Acontecendo) -->
+        <div id="loader" class="hidden flex flex-col items-center justify-center py-20 space-y-4">
+            <div class="w-14 h-14 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-lg font-medium text-indigo-300">✨ A mágica está acontecendo... Limpando erros e gerando gráficos...</p>
+        </div>
+
+        <!-- Dashboard (Oculto inicialmente) -->
+        <div id="dashboard" class="hidden space-y-8">
+
+            <!-- Barra de Ações do Topo -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-800/90 border border-slate-700 rounded-xl p-4 shadow">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-indigo-500/10 text-indigo-400">
+                        <i data-lucide="file-spreadsheet" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400">Arquivo Processado</p>
+                        <h2 id="file-badge" class="font-bold text-slate-100">planilha.xlsx</h2>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <!-- Seletor Dinâmico de Métrica -->
+                    <div class="flex items-center gap-2 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5">
+                        <label for="metric-selector" class="text-xs text-slate-400">Métrica KPI:</label>
+                        <select id="metric-selector" class="bg-transparent text-sm font-semibold text-indigo-300 focus:outline-none cursor-pointer"></select>
+                    </div>
+
+                    <!-- Baixar Excel Limpo -->
+                    <button id="btn-download-limpo" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold text-white transition shadow">
+                        <i data-lucide="download" class="w-4 h-4"></i> Baixar Planilha Limpa (.xlsx)
+                    </button>
+
+                    <!-- Enviar Nova Planilha -->
+                    <button id="btn-novo-arquivo" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-sm font-medium text-slate-200 transition">
+                        <i data-lucide="upload" class="w-4 h-4"></i> Outro Arquivo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Relatório de Auto-Limpeza + Insights Automáticos -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Relatório de Limpeza -->
+                <div id="report-box" class="bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-5 hidden">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-semibold text-emerald-400 flex items-center gap-2">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> Relatório do Robô de Limpeza
+                        </h4>
+                        <span id="report-count" class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-medium"></span>
+                    </div>
+                    <ul id="report-list" class="space-y-1.5 text-sm text-emerald-100/90"></ul>
+                </div>
+
+                <!-- Insights Inteligentes -->
+                <div id="insights-box" class="bg-indigo-950/30 border border-indigo-500/30 rounded-xl p-5 hidden">
+                    <h4 class="font-semibold text-indigo-300 flex items-center gap-2 mb-3">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-amber-400"></i> Descobertas Automáticas (Auto-EDA)
+                    </h4>
+                    <ul id="insights-list" class="space-y-2 text-sm text-slate-200"></ul>
+                </div>
+            </div>
+
+            <!-- Cards de KPIs -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm text-slate-400">Registros Válidos</p>
+                        <span id="kpi-cols" class="text-xs px-2 py-0.5 rounded bg-slate-700 text-cyan-300">0 colunas</span>
+                    </div>
+                    <h3 id="kpi-rows" class="text-3xl font-bold mt-2 text-indigo-400">0</h3>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <p id="kpi-sum-label" class="text-sm text-slate-400">Soma Principal</p>
+                    <h3 id="kpi-sum" class="text-3xl font-bold mt-2 text-emerald-400">0,00</h3>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <p id="kpi-avg-label" class="text-sm text-slate-400">Média por Registro</p>
+                    <h3 id="kpi-avg" class="text-3xl font-bold mt-2 text-amber-400">0,00</h3>
+                </div>
+                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <p id="kpi-max-label" class="text-sm text-slate-400">Pico Máximo</p>
+                    <h3 id="kpi-max" class="text-3xl font-bold mt-2 text-cyan-400">0,00</h3>
+                </div>
+            </div>
+
+            <!-- Gráficos (Grid até 4 Gráficos Inteligentes) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div id="card-chart1" class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <h3 id="chart1-title" class="text-lg font-semibold mb-4 text-slate-200">Gráfico 1</h3>
+                    <div class="relative h-72">
+                        <canvas id="myChart1"></canvas>
+                    </div>
+                </div>
+                <div id="card-chart2" class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <h3 id="chart2-title" class="text-lg font-semibold mb-4 text-slate-200">Gráfico 2</h3>
+                    <div class="relative h-72">
+                        <canvas id="myChart2"></canvas>
+                    </div>
+                </div>
+                <div id="card-chart3" class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <h3 id="chart3-title" class="text-lg font-semibold mb-4 text-slate-200">Gráfico 3</h3>
+                    <div class="relative h-72">
+                        <canvas id="myChart3"></canvas>
+                    </div>
+                </div>
+                <div id="card-chart4" class="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow">
+                    <h3 id="chart4-title" class="text-lg font-semibold mb-4 text-slate-200">Gráfico 4</h3>
+                    <div class="relative h-72">
+                        <canvas id="myChart4"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabela de Dados Limpos (Preview Interativo) -->
+            <div class="bg-slate-800 rounded-xl border border-slate-700 shadow overflow-hidden">
+                <div class="p-5 border-b border-slate-700 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-100 flex items-center gap-2">
+                            <i data-lucide="table" class="w-5 h-5 text-indigo-400"></i> Dados Limpos e Padronizados (Amostra)
+                        </h3>
+                        <p class="text-xs text-slate-400">Visualize como sua planilha ficou após a remoção de erros</p>
+                    </div>
+                    <div class="relative w-full sm:w-64">
+                        <input
+                            type="text"
+                            id="search-table"
+                            placeholder="Filtrar registros na tabela..."
+                            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
+                        >
+                    </div>
+                </div>
+                <div class="overflow-x-auto max-h-96">
+                    <table id="preview-table" class="w-full border-collapse">
+                        <thead id="preview-thead"></thead>
+                        <tbody id="preview-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Scripts Modulares -->
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
