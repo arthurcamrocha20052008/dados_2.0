@@ -1,0 +1,12 @@
+{
+  "id": "app.dashboardmagico",
+  "name": "Dashboards Automatizados",
+  "short_name": "Dashboards Automatizados",
+  "description": "Plataforma corporativa SaaS de Dashboards Automatizados e limpeza inteligente de dados.",
+  "start_url": "https://app.dashboardmagico.com/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#4f46e5",
+  "orientation": "any"
+}

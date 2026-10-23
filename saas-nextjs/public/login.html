@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Corporativo — Dashboards Automatizados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans antialiased flex flex-col justify-center items-center px-4 relative overflow-hidden">
+
+    <!-- Efeito de Luz de Fundo -->
+    <div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-indigo-600/15 blur-[120px] rounded-full"></div>
+
+    <div class="w-full max-w-md bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl p-8 shadow-2xl relative z-10">
+        <!-- Cabeçalho da Marca -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white">Dashboards Automatizados</h1>
+                    <p class="text-[11px] text-zinc-400">Segurança Criptografada • Argon2id</p>
+                </div>
+            </div>
+            <span class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                <i data-lucide="lock" class="w-3 h-3"></i> Protegido
+            </span>
+        </div>
+
+        <h2 class="text-xl font-bold text-zinc-100 mb-1">Entrar na sua Conta</h2>
+        <p class="text-xs text-zinc-400 mb-6">
+            Acesse o painel da sua empresa com seu e-mail e senha.
+        </p>
+
+        <!-- Alerta de Erro -->
+        <div id="alert-box" class="hidden mb-4 p-3 rounded-lg bg-red-950/50 border border-red-500/30 text-xs text-red-300"></div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="email" class="block text-xs font-medium text-zinc-300 mb-1.5">E-mail Corporativo</label>
+                <div class="relative">
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                        placeholder="contato@suaempresa.com.br"
+                        class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition"
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label for="senha" class="block text-xs font-medium text-zinc-300 mb-1.5">Senha</label>
+                <input
+                    type="password"
+                    id="senha"
+                    required
+                    placeholder="••••••••"
+                    class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition"
+                >
+            </div>
+
+            <button
+                type="submit"
+                id="btn-submit"
+                class="w-full py-2.5 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white transition shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2"
+            >
+                <i data-lucide="log-in" class="w-4 h-4"></i>
+                <span>Acessar Painel da Empresa</span>
+            </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-zinc-800/80 text-center space-y-3">
+            <p class="text-xs text-zinc-400">
+                Sua empresa ainda não tem conta?
+                <a href="./cadastro.html" class="text-emerald-400 hover:text-emerald-300 font-semibold underline underline-offset-4 ml-1">
+                    Criar Conta Agora
+                </a>
+            </p>
+            <p class="text-xs">
+                <a href="./index.html" class="text-zinc-500 hover:text-zinc-300 transition">
+                    ← Voltar para o Dashboard Principal
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { realizarLogin } from './js/auth.js';
+        lucide.createIcons();
+
+        const form = document.getElementById('login-form');
+        const alertBox = document.getElementById('alert-box');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alertBox.classList.add('hidden');
+            btnSubmit.disabled = true;
+            btnSubmit.querySelector('span').textContent = 'Verificando credenciais...';
+
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
+
+            const res = await realizarLogin({ email, senha });
+
+            if (res.success) {
+                window.location.href = './index.html';
+            } else {
+                alertBox.textContent = res.error || 'Falha ao autenticar.';
+                alertBox.classList.remove('hidden');
+                btnSubmit.disabled = false;
+                btnSubmit.querySelector('span').textContent = 'Acessar Painel da Empresa';
+            }
+        });
+    </script>
+</body>
+</html>
