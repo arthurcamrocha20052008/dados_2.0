@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from ETL.analise import gerar_analise_dashboard
 from ETL.limpeza import limpar_dados_excel
 
-app = FastAPI(title="Auto-Dashboard API", version="2.0")
+app = FastAPI(title="app.magicacampos API", version="2.0")
 
 # Habilita CORS para o frontend se conectar livremente de qualquer porta
 app.add_middleware(
@@ -132,3 +132,8 @@ async def download_excel_limpo():
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("fast:app", host="127.0.0.1", port=8000, reload=True)
+

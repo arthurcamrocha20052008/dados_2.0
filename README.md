@@ -1,4 +1,4 @@
-# 📊 Dashboard Mágico Automático (Dados 2.0)
+# 📊 app.magicacampos — Dashboard Mágico Automático (Dados 2.0)
 
 Sistema **Auto-EDA (Análise Exploratória de Dados Automática)** com **Robô de Limpeza de Dados (ETL)** integrado. Basta enviar qualquer planilha Excel (`.xlsx`, `.xls`) ou `.csv` (mesmo desorganizada ou com erros) e a plataforma limpa os dados, extrai KPIs, gera descobertas analíticas e monta um painel interativo automaticamente.
 
