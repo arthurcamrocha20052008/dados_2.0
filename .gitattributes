@@ -1,0 +1,6 @@
+# Configura o GitHub Linguist para definir Python como a linguagem primordial do repositório
+frontend/** linguist-vendored
+*.html linguist-vendored
+*.js linguist-vendored
+*.sql linguist-vendored
+backend/**/*.py linguist-language=Python

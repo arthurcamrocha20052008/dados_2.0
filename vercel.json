@@ -1,9 +1,6 @@
 {
   "version": 2,
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/cadastro", "destination": "/cadastro.html" }
-  ]
+  "buildCommand": "",
+  "outputDirectory": "frontend",
+  "cleanUrls": true
 }
