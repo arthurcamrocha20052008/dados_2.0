@@ -1,11 +1,12 @@
 {
-  "id": "app.magicacampos",
-  "name": "app.magicacampos — Dashboard Automático",
-  "short_name": "app.magicacampos",
-  "description": "Gerador automático de dashboards e limpeza inteligente de planilhas Excel e CSV.",
-  "start_url": "/",
+  "id": "app.dashboardmagico",
+  "name": "Dashboards Automatizados",
+  "short_name": "Dashboards Automatizados",
+  "description": "Plataforma corporativa SaaS de Dashboards Automatizados e limpeza inteligente de dados.",
+  "start_url": "https://app.dashboardmagico.com/",
+  "scope": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#6366f1",
+  "background_color": "#09090b",
+  "theme_color": "#4f46e5",
   "orientation": "any"
 }

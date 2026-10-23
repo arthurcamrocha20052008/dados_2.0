@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from ETL.analise import gerar_analise_dashboard
 from ETL.limpeza import limpar_dados_excel
 
-app = FastAPI(title="app.magicacampos API", version="2.0")
+app = FastAPI(title="Dashboards Automatizados API — app.dashboardmagico", version="2.0")
 
 # Habilita CORS para o frontend se conectar livremente de qualquer porta
 app.add_middleware(

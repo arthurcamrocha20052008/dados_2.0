@@ -1,4 +1,5 @@
-const BASE_URL = "http://localhost:8000/api";
+// Utiliza a origem atual em produção (https://app.dashboardmagico.com/api) sem depender de localhost fixo
+const BASE_URL = window.DASHBOARD_API_URL || `${window.location.origin}/api`;
 
 export async function uploadExcelFile(file) {
     const formData = new FormData();
@@ -11,7 +12,7 @@ export async function uploadExcelFile(file) {
         });
 
         if (!response.ok) {
-            throw new Error("Erro na comunicação com o servidor.");
+            throw new Error("Erro na comunicação com o servidor de Dashboards Automatizados.");
         }
 
         return await response.json();
