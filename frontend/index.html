@@ -82,30 +82,14 @@
         </header>
 
         <!-- Seção de Upload (Saudação da Empresa + Drag & Drop + Botão Demo) -->
-        <div id="upload-section" class="max-w-3xl mx-auto mb-8 space-y-5">
+        <div id="upload-section" class="max-w-3xl mx-auto mb-8 space-y-4">
 
-            <!-- Campo para Digitar o Nome da Empresa + Saudação Acima do Excel -->
-            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-3">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <label for="input-nome-empresa" class="text-xs font-medium text-zinc-400 flex items-center gap-1.5">
-                        <i data-lucide="building-2" class="w-4 h-4 text-indigo-400"></i>
-                        Identificação da Empresa:
-                    </label>
-                    <input
-                        type="text"
-                        id="input-nome-empresa"
-                        placeholder="Digite o nome da sua empresa..."
-                        class="w-full sm:w-80 px-3.5 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition"
-                    >
-                </div>
-
-                <!-- Saudação Dinâmica Exibida Acima do Lugar de Colocar o Excel -->
-                <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
-                    <h2 id="saudacao-empresa" class="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
-                        Olá, Sua Empresa
-                    </h2>
-                    <span class="text-[11px] text-zinc-500">Pronto para receber sua planilha</span>
-                </div>
+            <!-- Saudação Exibida Acima do Lugar de Colocar o Excel (Vinda do Criar Conta / Login) -->
+            <div class="flex items-center justify-between px-2">
+                <h2 id="saudacao-empresa" class="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
+                    Olá, Visitante
+                </h2>
+                <span class="text-xs text-zinc-500">Pronto para receber sua planilha</span>
             </div>
 
             <!-- Lugar de Colocar o Excel -->

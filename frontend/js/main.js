@@ -1,6 +1,6 @@
 import { uploadExcelFile, fetchDemoData, getDownloadLimpoUrl } from './api.js';
 import { renderCharts } from './grafico.js';
-import { obterUsuarioLogado, atualizarEmpresaLocal, encerrarSessao } from './auth.js';
+import { obterUsuarioLogado, encerrarSessao } from './auth.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
@@ -16,8 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loader = document.getElementById('loader');
     const dashboard = document.getElementById('dashboard');
 
-    // Elementos de Saudação da Empresa e Sessão
-    const inputNomeEmpresa = document.getElementById('input-nome-empresa');
+    // Elementos de Saudação da Empresa e Sessão (vindos do Criar Conta / Login)
     const saudacaoEmpresa = document.getElementById('saudacao-empresa');
     const saudacaoDashboard = document.getElementById('saudacao-dashboard');
     const navGuest = document.getElementById('nav-guest');
@@ -28,32 +27,21 @@ document.addEventListener("DOMContentLoaded", () => {
     let dadosAtuais = null;
 
     function atualizarTextoSaudacao(nome) {
-        const nomeExibicao = (nome && nome.trim()) ? nome.trim() : "Sua Empresa";
+        const nomeExibicao = (nome && nome.trim()) ? nome.trim() : "Visitante";
         saudacaoEmpresa.textContent = `Olá, ${nomeExibicao}`;
         if (saudacaoDashboard) {
             saudacaoDashboard.textContent = `Olá, ${nomeExibicao}`;
         }
     }
 
-    // Inicializa sessão caso o usuário tenha vindo do Login / Criar Conta
+    // Puxa o nome da empresa cadastrado em "Criar Conta" (ou Login) e exibe "Olá, <nome da empresa>" acima do Excel
     const usuarioSessao = obterUsuarioLogado();
     if (usuarioSessao && usuarioSessao.nome_empresa) {
-        inputNomeEmpresa.value = usuarioSessao.nome_empresa;
         atualizarTextoSaudacao(usuarioSessao.nome_empresa);
-
-        if (usuarioSessao.id) {
-            navGuest.classList.add('hidden');
-            navLogged.classList.remove('hidden');
-            navUserBadge.textContent = `${usuarioSessao.nome_empresa} (${usuarioSessao.email})`;
-        }
+        navGuest.classList.add('hidden');
+        navLogged.classList.remove('hidden');
+        navUserBadge.textContent = `${usuarioSessao.nome_empresa} (${usuarioSessao.email})`;
     }
-
-    // Quando a pessoa digitar o nome da empresa, atualiza imediatamente "Olá, <nome da empresa>" acima do Excel
-    inputNomeEmpresa.addEventListener('input', (e) => {
-        const valor = e.target.value;
-        atualizarTextoSaudacao(valor);
-        atualizarEmpresaLocal(valor.trim() || "Sua Empresa");
-    });
 
     if (btnLogout) {
         btnLogout.addEventListener('click', () => encerrarSessao());
