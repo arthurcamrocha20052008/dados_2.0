@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta — Dashboards Automatizados</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans antialiased flex flex-col justify-center items-center px-4 py-8 relative overflow-hidden">
+
+    <!-- Efeito de Luz de Fundo -->
+    <div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-600/15 blur-[120px] rounded-full"></div>
+
+    <div class="w-full max-w-md bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 rounded-2xl p-8 shadow-2xl relative z-10">
+        <!-- Cabeçalho da Marca -->
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center shadow">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white">Dashboards Automatizados</h1>
+                    <p class="text-[11px] text-zinc-400">Criptografia Argon2id • MySQL</p>
+                </div>
+            </div>
+            <span class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300">
+                <i data-lucide="shield-check" class="w-3 h-3"></i> Seguro
+            </span>
+        </div>
+
+        <h2 class="text-xl font-bold text-zinc-100 mb-1">Criar Conta da Empresa</h2>
+        <p class="text-xs text-zinc-400 mb-6">
+            Cadastre o nome da sua empresa, e-mail e senha para personalizar seus Dashboards Automatizados.
+        </p>
+
+        <!-- Alerta de Erro -->
+        <div id="alert-box" class="hidden mb-4 p-3 rounded-lg bg-red-950/50 border border-red-500/30 text-xs text-red-300"></div>
+
+        <form id="cadastro-form" class="space-y-4">
+            <div>
+                <label for="nome-empresa" class="block text-xs font-medium text-zinc-300 mb-1.5">
+                    Nome da Empresa <span class="text-emerald-400">*</span>
+                </label>
+                <input
+                    type="text"
+                    id="nome-empresa"
+                    required
+                    placeholder="Ex: TechSolutions Brasil Ltda"
+                    class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-emerald-500 transition"
+                >
+            </div>
+
+            <div>
+                <label for="nome-completo" class="block text-xs font-medium text-zinc-300 mb-1.5">
+                    Seu Nome / Responsável
+                </label>
+                <input
+                    type="text"
+                    id="nome-completo"
+                    placeholder="Ex: Arthur Rocha"
+                    class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition"
+                >
+            </div>
+
+            <div>
+                <label for="email" class="block text-xs font-medium text-zinc-300 mb-1.5">
+                    E-mail Corporativo <span class="text-emerald-400">*</span>
+                </label>
+                <input
+                    type="email"
+                    id="email"
+                    required
+                    placeholder="voce@suaempresa.com.br"
+                    class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition"
+                >
+            </div>
+
+            <div>
+                <label for="senha" class="block text-xs font-medium text-zinc-300 mb-1.5">
+                    Senha Segura (Mínimo 6 caracteres) <span class="text-emerald-400">*</span>
+                </label>
+                <input
+                    type="password"
+                    id="senha"
+                    required
+                    minlength="6"
+                    placeholder="••••••••"
+                    class="w-full px-3.5 py-2.5 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 transition"
+                >
+            </div>
+
+            <button
+                type="submit"
+                id="btn-submit"
+                class="w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold text-white transition shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+            >
+                <i data-lucide="user-plus" class="w-4 h-4"></i>
+                <span>Criar Conta e Acessar Dashboard</span>
+            </button>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-zinc-800/80 text-center space-y-3">
+            <p class="text-xs text-zinc-400">
+                Já possui uma conta cadastrada?
+                <a href="./login.html" class="text-indigo-400 hover:text-indigo-300 font-semibold underline underline-offset-4 ml-1">
+                    Fazer Login
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { realizarCadastro } from './js/auth.js';
+        lucide.createIcons();
+
+        const form = document.getElementById('cadastro-form');
+        const alertBox = document.getElementById('alert-box');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            alertBox.classList.add('hidden');
+            btnSubmit.disabled = true;
+            btnSubmit.querySelector('span').textContent = 'Criptografando e salvando...';
+
+            const nome_empresa = document.getElementById('nome-empresa').value.trim();
+            const nome_completo = document.getElementById('nome-completo').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const senha = document.getElementById('senha').value;
+
+            const res = await realizarCadastro({ nome_empresa, nome_completo, email, senha });
+
+            if (res.success) {
+                window.location.href = './index.html';
+            } else {
+                alertBox.textContent = res.error || 'Erro ao criar conta.';
+                alertBox.classList.remove('hidden');
+                btnSubmit.disabled = false;
+                btnSubmit.querySelector('span').textContent = 'Criar Conta e Acessar Dashboard';
+            }
+        });
+    </script>
+</body>
+</html>

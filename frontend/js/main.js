@@ -100,7 +100,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Botão para baixar planilha limpa
     btnDownloadLimpo.addEventListener('click', () => {
-        window.location.href = getDownloadLimpoUrl();
+        const url = getDownloadLimpoUrl();
+        if (url) {
+            window.location.href = url;
+        }
     });
 
     // Troca dinâmica da métrica principal nos KPIs

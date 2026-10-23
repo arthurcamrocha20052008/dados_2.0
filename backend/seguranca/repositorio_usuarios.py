@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import sqlite3
 from database import obter_conexao_mysql
@@ -10,8 +11,11 @@ from .criptografia import (
     verificar_senha,
 )
 
-# Banco local de contingência (SQLite) caso o MySQL Workbench esteja fechado no momento do teste
-LOCAL_DB_PATH = Path(__file__).resolve().parent / "usuarios_seguros.db"
+# Em produção na Vercel (Serverless), utiliza /tmp; localmente utiliza a pasta seguranca
+if os.getenv("VERCEL"):
+    LOCAL_DB_PATH = Path("/tmp/usuarios_seguros.db")
+else:
+    LOCAL_DB_PATH = Path(__file__).resolve().parent / "usuarios_seguros.db"
 
 
 def _inicializar_sqlite_contingencia():
