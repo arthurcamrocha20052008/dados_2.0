@@ -31,7 +31,7 @@
 </head>
 <body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans antialiased selection:bg-indigo-500 selection:text-white">
 
-    <!-- Navbar Corporativa Estilo Linear / Vercel -->
+    <!-- Navbar Corporativa com Área de Login / Criar Conta -->
     <nav class="sticky top-0 z-30 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -40,23 +40,36 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <span class="font-semibold tracking-tight text-zinc-100">Dashboards Automatizados</span>
-                    <span class="hidden sm:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
+                    <span class="hidden md:inline-block text-[11px] font-medium px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
                         app.dashboardmagico.com
                     </span>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    Motor Auto-EDA Online
-                </span>
+
+            <!-- Botões de Autenticação (Login / Criar Conta / Sessão Ativa) -->
+            <div class="flex items-center gap-2.5">
+                <div id="nav-guest" class="flex items-center gap-2">
+                    <a href="./login.html" class="px-3.5 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-200 transition">
+                        Entrar
+                    </a>
+                    <a href="./cadastro.html" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold text-white transition shadow-sm">
+                        Criar Conta
+                    </a>
+                </div>
+
+                <div id="nav-logged" class="hidden flex items-center gap-3">
+                    <span id="nav-user-badge" class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-full font-medium"></span>
+                    <button id="btn-logout" type="button" class="px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-medium text-zinc-300 transition">
+                        Sair
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
         <!-- Cabeçalho -->
-        <header class="text-center mb-10">
+        <header class="text-center mb-8">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-medium mb-4">
                 <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-400"></i> Inteligência Analítica Corporativa • Auto-Limpeza ETL
             </div>
@@ -68,8 +81,34 @@
             </p>
         </header>
 
-        <!-- Seção de Upload (Drag & Drop + Botão Demo) -->
-        <div id="upload-section" class="max-w-3xl mx-auto mb-8 space-y-4">
+        <!-- Seção de Upload (Saudação da Empresa + Drag & Drop + Botão Demo) -->
+        <div id="upload-section" class="max-w-3xl mx-auto mb-8 space-y-5">
+
+            <!-- Campo para Digitar o Nome da Empresa + Saudação Acima do Excel -->
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <label for="input-nome-empresa" class="text-xs font-medium text-zinc-400 flex items-center gap-1.5">
+                        <i data-lucide="building-2" class="w-4 h-4 text-indigo-400"></i>
+                        Identificação da Empresa:
+                    </label>
+                    <input
+                        type="text"
+                        id="input-nome-empresa"
+                        placeholder="Digite o nome da sua empresa..."
+                        class="w-full sm:w-80 px-3.5 py-2 rounded-lg bg-zinc-950 border border-zinc-800 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition"
+                    >
+                </div>
+
+                <!-- Saudação Dinâmica Exibida Acima do Lugar de Colocar o Excel -->
+                <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between">
+                    <h2 id="saudacao-empresa" class="text-2xl font-bold tracking-tight bg-gradient-to-r from-indigo-400 to-emerald-400 bg-clip-text text-transparent">
+                        Olá, Sua Empresa
+                    </h2>
+                    <span class="text-[11px] text-zinc-500">Pronto para receber sua planilha</span>
+                </div>
+            </div>
+
+            <!-- Lugar de Colocar o Excel -->
             <div id="upload-container" class="bg-zinc-900/60 border border-dashed border-zinc-700 rounded-2xl p-12 text-center hover:border-indigo-500/80 hover:bg-zinc-900 transition-all cursor-pointer shadow-2xl group">
                 <input type="file" id="excel-file" class="hidden" accept=".xlsx, .xls, .csv">
                 <div class="flex flex-col items-center justify-center space-y-4">
@@ -85,7 +124,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-center pt-2">
+            <div class="flex items-center justify-center pt-1">
                 <button id="btn-demo" type="button" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs sm:text-sm font-medium text-zinc-200 transition shadow-sm">
                     <i data-lucide="wand-2" class="w-4 h-4 text-indigo-400"></i>
                     Explorar Demonstração Executiva (Planilha com Erros Reais)
@@ -101,6 +140,14 @@
 
         <!-- Dashboard (Oculto inicialmente) -->
         <div id="dashboard" class="hidden space-y-6">
+
+            <!-- Saudação da Empresa no Topo do Dashboard Gerado -->
+            <div class="bg-zinc-900/90 border border-zinc-800 rounded-xl px-5 py-3 flex items-center justify-between">
+                <h2 id="saudacao-dashboard" class="text-lg font-bold text-emerald-400">
+                    Olá, Sua Empresa
+                </h2>
+                <span class="text-xs text-zinc-400">Painel Executivo Gerado Automaticamente</span>
+            </div>
 
             <!-- Barra de Ações do Topo -->
             <div class="flex flex-wrap items-center justify-between gap-4 bg-zinc-900/90 border border-zinc-800 rounded-xl p-4 shadow-sm">
@@ -135,7 +182,6 @@
 
             <!-- Relatório de Auto-Limpeza + Insights Automáticos -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Relatório de Limpeza -->
                 <div id="report-box" class="bg-zinc-900/70 border border-emerald-500/20 rounded-xl p-5 hidden">
                     <div class="flex items-center justify-between mb-3">
                         <h4 class="text-sm font-semibold text-emerald-400 flex items-center gap-2">
@@ -146,7 +192,6 @@
                     <ul id="report-list" class="space-y-1.5 text-xs text-zinc-300"></ul>
                 </div>
 
-                <!-- Insights Inteligentes -->
                 <div id="insights-box" class="bg-zinc-900/70 border border-indigo-500/20 rounded-xl p-5 hidden">
                     <h4 class="text-sm font-semibold text-indigo-300 flex items-center gap-2 mb-3">
                         <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> Insights Executivos (Auto-EDA)
@@ -178,7 +223,7 @@
                 </div>
             </div>
 
-            <!-- Gráficos (Grid até 4 Gráficos Inteligentes) -->
+            <!-- Gráficos -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div id="card-chart1" class="bg-zinc-900/90 p-6 rounded-xl border border-zinc-800/90 shadow-sm">
                     <h3 id="chart1-title" class="text-sm font-semibold mb-4 text-zinc-200">Gráfico 1</h3>
@@ -206,7 +251,7 @@
                 </div>
             </div>
 
-            <!-- Tabela de Dados Limpos (Preview Interativo) -->
+            <!-- Tabela de Dados Limpos -->
             <div class="bg-zinc-900/90 rounded-xl border border-zinc-800/90 shadow-sm overflow-hidden">
                 <div class="p-5 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-4">
                     <div>

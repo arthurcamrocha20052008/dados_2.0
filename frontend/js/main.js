@@ -1,5 +1,6 @@
 import { uploadExcelFile, fetchDemoData, getDownloadLimpoUrl } from './api.js';
 import { renderCharts } from './grafico.js';
+import { obterUsuarioLogado, atualizarEmpresaLocal, encerrarSessao } from './auth.js';
 
 document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
@@ -15,7 +16,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const loader = document.getElementById('loader');
     const dashboard = document.getElementById('dashboard');
 
+    // Elementos de Saudação da Empresa e Sessão
+    const inputNomeEmpresa = document.getElementById('input-nome-empresa');
+    const saudacaoEmpresa = document.getElementById('saudacao-empresa');
+    const saudacaoDashboard = document.getElementById('saudacao-dashboard');
+    const navGuest = document.getElementById('nav-guest');
+    const navLogged = document.getElementById('nav-logged');
+    const navUserBadge = document.getElementById('nav-user-badge');
+    const btnLogout = document.getElementById('btn-logout');
+
     let dadosAtuais = null;
+
+    function atualizarTextoSaudacao(nome) {
+        const nomeExibicao = (nome && nome.trim()) ? nome.trim() : "Sua Empresa";
+        saudacaoEmpresa.textContent = `Olá, ${nomeExibicao}`;
+        if (saudacaoDashboard) {
+            saudacaoDashboard.textContent = `Olá, ${nomeExibicao}`;
+        }
+    }
+
+    // Inicializa sessão caso o usuário tenha vindo do Login / Criar Conta
+    const usuarioSessao = obterUsuarioLogado();
+    if (usuarioSessao && usuarioSessao.nome_empresa) {
+        inputNomeEmpresa.value = usuarioSessao.nome_empresa;
+        atualizarTextoSaudacao(usuarioSessao.nome_empresa);
+
+        if (usuarioSessao.id) {
+            navGuest.classList.add('hidden');
+            navLogged.classList.remove('hidden');
+            navUserBadge.textContent = `${usuarioSessao.nome_empresa} (${usuarioSessao.email})`;
+        }
+    }
+
+    // Quando a pessoa digitar o nome da empresa, atualiza imediatamente "Olá, <nome da empresa>" acima do Excel
+    inputNomeEmpresa.addEventListener('input', (e) => {
+        const valor = e.target.value;
+        atualizarTextoSaudacao(valor);
+        atualizarEmpresaLocal(valor.trim() || "Sua Empresa");
+    });
+
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => encerrarSessao());
+    }
 
     // Evento de clique para abrir o seletor de arquivos
     uploadContainer.addEventListener('click', () => fileInput.click());
@@ -23,16 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
     // Efeitos visuais de Drag & Drop
     uploadContainer.addEventListener('dragover', (e) => {
         e.preventDefault();
-        uploadContainer.classList.add('border-indigo-500', 'bg-slate-700/50');
+        uploadContainer.classList.add('border-indigo-500', 'bg-zinc-900');
     });
 
     uploadContainer.addEventListener('dragleave', () => {
-        uploadContainer.classList.remove('border-indigo-500', 'bg-slate-700/50');
+        uploadContainer.classList.remove('border-indigo-500', 'bg-zinc-900');
     });
 
     uploadContainer.addEventListener('drop', (e) => {
         e.preventDefault();
-        uploadContainer.classList.remove('border-indigo-500', 'bg-slate-700/50');
+        uploadContainer.classList.remove('border-indigo-500', 'bg-zinc-900');
         if (e.dataTransfer.files.length > 0) {
             handleFile(e.dataTransfer.files[0]);
         }
@@ -139,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const trHead = document.createElement('tr');
         columns.forEach(col => {
             const th = document.createElement('th');
-            th.className = 'px-4 py-3 text-left text-xs font-semibold text-indigo-300 uppercase tracking-wider border-b border-slate-700 bg-slate-800/90 sticky top-0';
+            th.className = 'px-4 py-3 text-left text-xs font-semibold text-indigo-300 uppercase tracking-wider border-b border-zinc-800 bg-zinc-900/90 sticky top-0';
             th.textContent = col;
             trHead.appendChild(th);
         });
@@ -147,10 +189,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         rows.forEach(row => {
             const tr = document.createElement('tr');
-            tr.className = 'hover:bg-slate-700/40 transition border-b border-slate-800';
+            tr.className = 'hover:bg-zinc-800/40 transition border-b border-zinc-800/60';
             row.forEach(cell => {
                 const td = document.createElement('td');
-                td.className = 'px-4 py-2.5 text-sm text-slate-300 whitespace-nowrap';
+                td.className = 'px-4 py-2.5 text-xs text-zinc-300 whitespace-nowrap';
                 td.textContent = typeof cell === 'number' ? cell.toLocaleString('pt-BR') : cell;
                 tr.appendChild(td);
             });

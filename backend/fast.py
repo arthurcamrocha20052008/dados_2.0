@@ -1,17 +1,23 @@
 import io
 from pathlib import Path
 import pandas as pd
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, Header, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 from ETL.analise import gerar_analise_dashboard
 from ETL.limpeza import limpar_dados_excel
 from database import listar_historico_mysql, salvar_processamento_mysql
+from seguranca import (
+    autenticar_usuario,
+    cadastrar_usuario,
+    verificar_token_sessao,
+)
 
 app = FastAPI(title="Dashboards Automatizados API — app.dashboardmagico", version="2.0")
 
-# Habilita CORS para o frontend se conectar livremente de qualquer porta
+# Habilita CORS para o frontend se conectar livremente
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,6 +28,47 @@ app.add_middleware(
 
 # Armazena em memória a última planilha limpa para permitir download corrigido
 _ESTADO_ATUAL = {"df_limpo": None, "nome_arquivo": "planilha_limpa.xlsx"}
+
+
+class CadastroPayload(BaseModel):
+    nome_empresa: str
+    email: str
+    senha: str
+    nome_completo: str = ""
+
+
+class LoginPayload(BaseModel):
+    email: str
+    senha: str
+
+
+@app.post("/api/auth/cadastro")
+async def api_cadastrar(payload: CadastroPayload):
+    """Cria uma nova conta com senha protegida por Argon2id na pasta seguranca."""
+    return cadastrar_usuario(
+        nome_empresa=payload.nome_empresa,
+        email=payload.email,
+        senha=payload.senha,
+        nome_completo=payload.nome_completo,
+    )
+
+
+@app.post("/api/auth/login")
+async def api_login(payload: LoginPayload):
+    """Autentica o usuário com verificação criptográfica Argon2id."""
+    return autenticar_usuario(email=payload.email, senha=payload.senha)
+
+
+@app.get("/api/auth/sessao")
+async def api_verificar_sessao(authorization: str | None = Header(default=None)):
+    """Valida o token assinado da sessão ativa."""
+    if not authorization or not authorization.startswith("Bearer "):
+        return {"authenticated": False}
+    token = authorization.replace("Bearer ", "").strip()
+    dados = verificar_token_sessao(token)
+    if not dados:
+        return {"authenticated": False}
+    return {"authenticated": True, "usuario": dados}
 
 
 def _formatar_preview(df: pd.DataFrame, limite: int = 50) -> list[list]:
@@ -54,12 +101,6 @@ def _processar_dataframe(df_bruto: pd.DataFrame, nome_arquivo: str):
         "columns": df_limpo.columns.tolist(),
         "preview": _formatar_preview(df_limpo, 50),
     }
-
-
-@app.get("/api/historico")
-async def historico_dashboards():
-    """Lista os dashboards salvos no banco MySQL Workbench."""
-    return {"success": True, "historico": listar_historico_mysql()}
 
 
 @app.post("/api/upload")
@@ -117,6 +158,12 @@ async def carregar_planilha_demo():
     return _processar_dataframe(df_demo, "vendas_com_erros_exemplo.xlsx")
 
 
+@app.get("/api/historico")
+async def historico_dashboards():
+    """Lista os dashboards salvos no banco MySQL Workbench."""
+    return {"success": True, "historico": listar_historico_mysql()}
+
+
 @app.get("/api/download-limpo")
 async def download_excel_limpo():
     df_limpo = _ESTADO_ATUAL.get("df_limpo")
@@ -138,7 +185,7 @@ async def download_excel_limpo():
     )
 
 
-# Serve o frontend automaticamente na raiz (http://localhost:8000)
+# Serve o frontend automaticamente na raiz
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
@@ -146,4 +193,3 @@ if FRONTEND_DIR.exists():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("fast:app", host="127.0.0.1", port=8000, reload=True)
-
