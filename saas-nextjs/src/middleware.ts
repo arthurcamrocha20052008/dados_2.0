@@ -1,52 +1,41 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'chave-corporativa-ultra-secreta-dashboardmagico-2026'
+)
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
+  const token = request.cookies.get('dm_session')?.value
+  let isAuthenticated = false
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
+  if (token) {
+    try {
+      await jwtVerify(token, JWT_SECRET)
+      isAuthenticated = true
+    } catch {
+      isAuthenticated = false
     }
-  )
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  }
 
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard')
   const isAuthRoute =
     request.nextUrl.pathname.startsWith('/signin') ||
     request.nextUrl.pathname.startsWith('/signup')
 
-  // Redireciona usuários não autenticados que tentam acessar /dashboard
-  if (!user && isDashboardRoute) {
+  if (!isAuthenticated && isDashboardRoute) {
     const loginUrl = request.nextUrl.clone()
     loginUrl.pathname = '/signin'
     return NextResponse.redirect(loginUrl)
   }
 
-  // Redireciona usuários já autenticados das telas de login para /dashboard
-  if (user && isAuthRoute) {
+  if (isAuthenticated && isAuthRoute) {
     const dashUrl = request.nextUrl.clone()
     dashUrl.pathname = '/dashboard'
     return NextResponse.redirect(dashUrl)
   }
 
-  return supabaseResponse
+  return NextResponse.next()
 }
 
 export const config = {

@@ -1,6 +1,6 @@
-# 🚀 Dashboards Automatizados — SaaS (`app.dashboardmagico`)
+# 🚀 Dashboards Automatizados — SaaS (`app.dashboardmagico` + MySQL Workbench)
 
-Arquitetura SaaS corporativa construída com **Next.js (App Router)**, **Tailwind CSS** (Design System inspirado em Linear/Vercel) e **Supabase (PostgreSQL & Auth)**, pré-configurada para operar sob **HTTPS** no domínio **`https://app.dashboardmagico.com`**.
+Arquitetura SaaS corporativa construída com **Next.js (App Router)**, **Tailwind CSS** (Design System inspirado em Linear/Vercel) e **MySQL Workbench (`mysql2/promise`)**, pré-configurada para operar sob **HTTPS** no domínio **`https://app.dashboardmagico.com`**.
 
 ---
 
@@ -8,20 +8,23 @@ Arquitetura SaaS corporativa construída com **Next.js (App Router)**, **Tailwin
 
 ```text
 saas-nextjs/
-├── .env.example                     # Variáveis de ambiente de produção (HTTPS)
-├── package.json                     # Dependências Next.js 15 + Supabase SSR + Tailwind
+├── .env.example                     # Variáveis de ambiente MySQL Workbench e HTTPS
+├── package.json                     # Next.js 15 + mysql2 + bcryptjs + jose + Tailwind
 └── src/
-    ├── middleware.ts                # Proteção de rotas (/dashboard) e sessão Supabase
+    ├── middleware.ts                # Proteção de rotas (/dashboard) via JWT HttpOnly
     ├── lib/
-    │   └── supabase/
-    │       ├── client.ts            # Cliente Supabase para Client Components
-    │       └── server.ts            # Cliente Supabase para Server Components / Actions
+    │   └── mysql/
+    │       └── db.ts                # Pool de conexões MySQL Workbench (dashboard_magico)
     └── app/
         ├── layout.tsx               # Root Layout com branding "Dashboards Automatizados"
+        ├── api/
+        │   └── auth/
+        │       ├── signin/route.ts  # Login consultando a tabela `usuarios` no MySQL
+        │       └── signup/route.ts  # Cadastro gravando na tabela `usuarios` no MySQL
         ├── signin/
         │   └── page.tsx             # Tela de Login Corporativo (/signin)
         ├── signup/
         │   └── page.tsx             # Tela de Cadastro Corporativo (/signup)
         └── dashboard/
-            └── page.tsx             # Painel protegido (/dashboard) de Dashboards Automatizados
+            └── page.tsx             # Painel protegido (/dashboard) integrado ao MySQL
 ```

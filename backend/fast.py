@@ -7,6 +7,7 @@ from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from ETL.analise import gerar_analise_dashboard
 from ETL.limpeza import limpar_dados_excel
+from database import listar_historico_mysql, salvar_processamento_mysql
 
 app = FastAPI(title="Dashboards Automatizados API — app.dashboardmagico", version="2.0")
 
@@ -40,9 +41,12 @@ def _processar_dataframe(df_bruto: pd.DataFrame, nome_arquivo: str):
     nome_base = Path(nome_arquivo).stem
     _ESTADO_ATUAL["nome_arquivo"] = f"{nome_base}_limpo.xlsx"
 
+    status_db = salvar_processamento_mysql(nome_arquivo, relatorio, insights, kpis, charts)
+
     return {
         "success": True,
         "filename": nome_arquivo,
+        "mysql": status_db,
         "relatorio": relatorio,
         "insights": insights,
         "kpis": kpis,
@@ -50,6 +54,12 @@ def _processar_dataframe(df_bruto: pd.DataFrame, nome_arquivo: str):
         "columns": df_limpo.columns.tolist(),
         "preview": _formatar_preview(df_limpo, 50),
     }
+
+
+@app.get("/api/historico")
+async def historico_dashboards():
+    """Lista os dashboards salvos no banco MySQL Workbench."""
+    return {"success": True, "historico": listar_historico_mysql()}
 
 
 @app.post("/api/upload")

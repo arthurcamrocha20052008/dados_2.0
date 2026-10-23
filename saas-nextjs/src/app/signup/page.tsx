@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
 
 export default function SignUpPage() {
-  const supabase = createClient()
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,23 +17,24 @@ export default function SignUpPage() {
     setErrorMsg(null)
     setMessage(null)
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: 'https://app.dashboardmagico.com/dashboard',
-        data: { full_name: fullName },
-      },
-    })
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName, email, password }),
+      })
+      const data = await res.json()
 
-    if (error) {
-      setErrorMsg(error.message)
-    } else {
-      setMessage(
-        'Conta criada com sucesso! Verifique seu e-mail para confirmar o acesso a https://app.dashboardmagico.com.'
-      )
+      if (!res.ok) {
+        setErrorMsg(data.error || 'Erro ao cadastrar usuário no MySQL.')
+      } else {
+        setMessage(data.message)
+      }
+    } catch {
+      setErrorMsg('Falha de comunicação com o servidor MySQL.')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   return (
@@ -51,13 +50,13 @@ export default function SignUpPage() {
             <h1 className="text-lg font-semibold tracking-tight text-white">
               Dashboards Automatizados
             </h1>
-            <p className="text-xs text-zinc-400">app.dashboardmagico.com</p>
+            <p className="text-xs text-zinc-400">app.dashboardmagico.com • MySQL</p>
           </div>
         </div>
 
         <h2 className="text-xl font-bold text-zinc-100 mb-1">Criar Conta Corporativa</h2>
         <p className="text-xs text-zinc-400 mb-6">
-          Configure seu workspace de BI e automação analítica em segundos.
+          Os dados serão gravados diretamente na tabela <code className="text-zinc-300">usuarios</code> do MySQL Workbench.
         </p>
 
         {errorMsg && (
@@ -121,7 +120,7 @@ export default function SignUpPage() {
             disabled={loading}
             className="w-full py-2.5 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-sm font-semibold text-white transition shadow-lg shadow-emerald-600/20"
           >
-            {loading ? 'Provisionando Workspace...' : 'Ativar Dashboards Automatizados'}
+            {loading ? 'Gravando no MySQL...' : 'Ativar Dashboards Automatizados'}
           </button>
         </form>
 
